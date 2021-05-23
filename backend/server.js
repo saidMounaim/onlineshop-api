@@ -4,6 +4,9 @@ import dotenv from 'dotenv';
 import path from 'path';
 import connectDB from './config/db.js';
 
+//ROUTES
+import UserRoutes from './routes/UserRoutes.js';
+
 dotenv.config();
 
 const app = express();
@@ -21,6 +24,9 @@ app.use('/uploads', express.static(path.join(__dirname, '/uploads')));
 app.get('/api/v1/', (req, res) => {
 	res.status(201).json({ success: true, message: 'Welcome to online shop API' });
 });
+
+//USER ROUTES
+app.use('/api/v1/users', UserRoutes);
 
 const PORT = process.env.PORT || 5000;
 
