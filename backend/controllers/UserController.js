@@ -9,6 +9,20 @@ export const getAll = asyncHandler(async (req, res) => {
 	res.status(201).json({ success: true, count: users.length, data: users });
 });
 
+//@DESC Get Single User
+//@ROUTE /api/v1/users/:id
+//@METHOD GET
+export const getUser = asyncHandler(async (req, res) => {
+	const user = await User.findById(req.params.id);
+
+	if (!user) {
+		res.status(404);
+		throw new Error('User not found');
+	}
+
+	res.status(201).json({ success: true, data: user });
+});
+
 //@DESC Add User
 //@ROUTE /api/v1/users
 //@METHOD POST
