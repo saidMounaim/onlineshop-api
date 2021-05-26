@@ -50,3 +50,19 @@ export const updateUser = asyncHandler(async (req, res) => {
 
 	res.status(201).json({ success: true, data: user });
 });
+
+//@DESC Delete User
+//@ROUTE /api/v1/users/:id
+//@METHOD DELETE
+export const deleteUser = asyncHandler(async (req, res) => {
+	let user = await User.findById(req.params.id);
+
+	if (!user) {
+		res.status(404);
+		throw new Error('User not found');
+	}
+
+	await user.delete();
+
+	res.status(201).json({ success: true, data: {} });
+});
