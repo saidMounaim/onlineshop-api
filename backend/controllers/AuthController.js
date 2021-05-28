@@ -59,3 +59,20 @@ export const register = asyncHandler(async (req, res) => {
 		},
 	});
 });
+
+//@DESC Get Me
+//@ROUTE /api/v1/auth/me
+//@METHOD GET
+export const getMe = asyncHandler(async (req, res) => {
+	const user = await User.findById(req.user.id);
+	res.status(201).json({
+		success: true,
+		data: {
+			id: user._id,
+			name: user.name,
+			email: user.email,
+			isAdmin: user.isAdmin,
+			token: generateToken(user._id),
+		},
+	});
+});
