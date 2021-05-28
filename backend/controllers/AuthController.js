@@ -34,3 +34,28 @@ export const login = asyncHandler(async (req, res) => {
 		throw new Error('password incorrect');
 	}
 });
+
+//@DESC Register User
+//@ROUTE /api/v1/auth/register
+//@METHOD POST
+export const register = asyncHandler(async (req, res) => {
+	const userExist = await User.findOne({ email: req.body.email });
+
+	if (userExist) {
+		res.status(401);
+		throw new Error('User already exists');
+	}
+
+	const user = await User.create(req.body);
+
+	res.status(201).json({
+		success: true,
+		data: {
+			id: user._id,
+			name: user.name,
+			email: user.email,
+			isAdmin: user.isAdmin,
+			token: generateToken(user._id),
+		},
+	});
+});
