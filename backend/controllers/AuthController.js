@@ -60,6 +60,30 @@ export const register = asyncHandler(async (req, res) => {
 	});
 });
 
+//@DESC Update User Profile
+//@ROUTE /api/v1/auth/updateprofile
+//@METHOD PUT
+export const updateProfile = asyncHandler(async (req, res) => {
+	let user = await User.findById(req.user.id);
+
+	if (!user) {
+		res.status(404);
+		throw new Error('User not found');
+	}
+
+	const updateData = {
+		name: req.body.name,
+		email: req.body.email,
+	};
+
+	user = await User.findByIdAndUpdate(req.user.id, updateData, {
+		new: true,
+		runValidators: true,
+	});
+
+	res.status(201).json({ success: true, data: user });
+});
+
 //@DESC Get Me
 //@ROUTE /api/v1/auth/me
 //@METHOD GET
