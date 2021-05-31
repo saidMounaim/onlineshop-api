@@ -23,6 +23,9 @@ const UserSchema = mongoose.Schema(
 			required: [true, 'Please add a password'],
 		},
 
+		resetPasswordToken: String,
+		expiredPasswordToken: Date,
+
 		isAdmin: {
 			type: Boolean,
 			default: false,
