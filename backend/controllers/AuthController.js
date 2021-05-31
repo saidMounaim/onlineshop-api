@@ -1,7 +1,9 @@
 import asyncHandler from 'express-async-handler';
 import User from '../models/User.js';
 import bcrypt from 'bcrypt';
+import crypto from 'crypto';
 import generateToken from '../utils/generateToken.js';
+import sendMailer from '../utils/sendMail.js';
 
 //@DESC Login User
 //@ROUTE /api/v1/auth/login
@@ -136,4 +138,47 @@ export const getMe = asyncHandler(async (req, res) => {
 			token: generateToken(user._id),
 		},
 	});
+});
+
+//@DESC Forgot Password
+//@ROUTE /api/v1/auth/forgotpassword
+//@METHOD POST
+export const forgotPassword = asyncHandler(async (req, res) => {
+	const resetToken = crypto.randomBytes(20).toString('hex');
+	const hash = crypto.createHash('sha256').update(resetToken).digest('hex');
+
+	let user = await User.findOne({ email: req.body.email });
+
+	if (!user) {
+		res.status(401);
+		throw new Error('User not found');
+	}
+
+	const resetUrl = `${req.protocol}://${req.get('host')}/api/v1/auth/resetpassword/${hash}`;
+
+	const subject = 'Forgor Password';
+	const to = req.body.email;
+	const message = `
+		you requested to reset your password,<br /> 
+		please check the link below to reset your password<br />
+		<a href="${resetUrl}" target="_blank" >Reset Password</a>
+	`;
+
+	user.resetPasswordToken = hash;
+	user.expiredPasswordToken = new Date().setHours(new Date().getHours() + 1);
+
+	await user.save();
+
+	try {
+		sendMailer({ to, subject, message });
+
+		res.status(201).json({ success: true, message: 'check your email' });
+	} catch (error) {
+		user.resetPasswordToken = undefined;
+		user.expiredPasswordToken = undefined;
+		await user.save({ validateBeforeSave: false });
+
+		res.status(401);
+		throw new Error(error.message);
+	}
 });
