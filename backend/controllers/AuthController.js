@@ -182,3 +182,24 @@ export const forgotPassword = asyncHandler(async (req, res) => {
 		throw new Error(error.message);
 	}
 });
+
+//@DESC Reset Password
+//@ROUTE /api/v1/auth/resetpassword/:hashToken
+//@METHOD PUT
+export const resetPassword = asyncHandler(async (req, res) => {
+	let user = await User.findOne({
+		resetPasswordToken: req.params.hashToken,
+		expiredPasswordToken: { $gt: Date.now() },
+	});
+
+	if (!user) {
+		res.status(404);
+		throw new Error('User not found');
+	}
+
+	user.password = req.body.newPassword;
+
+	await user.save();
+
+	res.status(201).json({ success: true, data: user });
+});
