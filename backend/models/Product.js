@@ -37,7 +37,7 @@ const ProductSchema = mongoose.Schema(
 			required: [true, 'Please add a count in stock'],
 		},
 
-		rating: {
+		review: {
 			comment: {
 				type: String,
 				required: [true, 'Please add a comment'],

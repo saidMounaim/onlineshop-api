@@ -9,6 +9,7 @@ import { notFound, errorHandler } from './middlewares/ErrorMiddleware.js';
 //ROUTES
 import UserRoutes from './routes/UserRoutes.js';
 import AuthRoutes from './routes/AuthRoutes.js';
+import ProductRoutes from './routes/ProductRoutes.js';
 
 dotenv.config();
 
@@ -33,6 +34,9 @@ app.use('/api/v1/users', UserRoutes);
 
 //AUTH ROUTES
 app.use('/api/v1/auth', AuthRoutes);
+
+//PRODUCTE ROUTES
+app.use('/api/v1/products', ProductRoutes);
 
 app.use(notFound);
 app.use(errorHandler);
