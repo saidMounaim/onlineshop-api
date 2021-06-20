@@ -9,6 +9,7 @@ const ProductSchema = mongoose.Schema(
 
 		image: {
 			type: String,
+			required: [true, 'Please add a image'],
 		},
 
 		description: {
@@ -35,17 +36,6 @@ const ProductSchema = mongoose.Schema(
 		countInStock: {
 			type: Number,
 			required: [true, 'Please add a count in stock'],
-		},
-
-		review: {
-			comment: {
-				type: String,
-				required: [true, 'Please add a comment'],
-			},
-			rating: {
-				type: Number,
-				default: 0,
-			},
 		},
 	},
 	{

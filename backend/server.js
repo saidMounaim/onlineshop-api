@@ -1,6 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
+import fileUpload from 'express-fileupload';
 import path from 'path';
 import connectDB from './config/db.js';
 
@@ -20,6 +21,8 @@ connectDB();
 app.use(cors());
 
 app.use(express.json());
+
+app.use(fileUpload());
 
 const __dirname = path.resolve();
 app.use('/uploads', express.static(path.join(__dirname, '/uploads')));
