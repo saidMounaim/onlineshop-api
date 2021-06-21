@@ -99,3 +99,19 @@ export const updateProduct = asyncHandler(async (req, res) => {
 		res.status(201).json({ success: true, data: product });
 	}
 });
+
+//@DESC Delete Product
+//@ROUTE /api/v1/products/:id
+//@METHOD DELETE
+export const deleteProduct = asyncHandler(async (req, res) => {
+	let product = await Product.findById(req.params.id);
+
+	if (!product) {
+		res.status(404);
+		throw new Error('Product not found');
+	}
+
+	await product.remove();
+
+	res.status(201).json({ success: true, data: {} });
+});
