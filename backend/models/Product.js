@@ -25,7 +25,6 @@ const ProductSchema = mongoose.Schema(
 		category: {
 			type: String,
 			required: [true, 'Please add a category'],
-			enum: ['Electronics'],
 		},
 
 		price: {
@@ -36,6 +35,12 @@ const ProductSchema = mongoose.Schema(
 		countInStock: {
 			type: Number,
 			required: [true, 'Please add a count in stock'],
+		},
+
+		user: {
+			type: mongoose.Schema.Types.ObjectId,
+			required: true,
+			ref: 'User',
 		},
 	},
 	{

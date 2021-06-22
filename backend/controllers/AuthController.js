@@ -201,5 +201,8 @@ export const resetPassword = asyncHandler(async (req, res) => {
 
 	await user.save();
 
+	user.resetPasswordToken = undefined;
+	user.expiredPasswordToken = undefined;
+
 	res.status(201).json({ success: true, data: user });
 });

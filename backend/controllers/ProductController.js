@@ -5,7 +5,7 @@ import Product from '../models/Product.js';
 //@ROUTE /api/v1/products
 //@METHOD GET
 export const getAll = asyncHandler(async (req, res) => {
-	const products = await Product.find({});
+	const products = await Product.find({}).populate('user');
 
 	res.status(201).json({ success: true, count: products.length, data: products });
 });
@@ -45,6 +45,7 @@ export const addProduct = asyncHandler(async (req, res) => {
 				category,
 				price,
 				countInStock,
+				user: req.user.id,
 			});
 
 			res.status(201).json({ success: true, data: products });
