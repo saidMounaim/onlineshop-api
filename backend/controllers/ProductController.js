@@ -64,6 +64,11 @@ export const updateProduct = asyncHandler(async (req, res) => {
 		throw new Error('Product not found');
 	}
 
+	if (req.user.id !== product.user.toString()) {
+		res.status(401);
+		throw new Error('User not authrized to update product');
+	}
+
 	if (req.files) {
 		if (!req.files.image.mimetype.startsWith('image')) {
 			res.status(401);
@@ -110,6 +115,11 @@ export const deleteProduct = asyncHandler(async (req, res) => {
 	if (!product) {
 		res.status(404);
 		throw new Error('Product not found');
+	}
+
+	if (req.user.id !== product.user.toString()) {
+		res.status(401);
+		throw new Error('User not authrized to update product');
 	}
 
 	await product.remove();
