@@ -21,3 +21,27 @@ export const addToCart = asyncHandler(async (req, res) => {
 
   res.status(201).json({ success: true, data: cart });
 });
+
+//@DESC Update Cart
+//@ROUTE /api/v1/cart/:id
+//@METHOD PUT
+export const updateCart = asyncHandler(async (req, res) => {
+  let cart = await Cart.findById(req.params.id);
+
+  if (cart.user._id.toString() !== req.user.id.toString()) {
+    res.status(404);
+    throw new Error("Can not update this cart");
+  }
+
+  if (!cart) {
+    res.status(404);
+    throw new Error("Cart not found");
+  }
+
+  cart = await Cart.findByIdAndUpdate(req.params.id, req.body, {
+    runValidators: true,
+    new: true,
+  });
+
+  res.status(201).json({ success: true, data: cart });
+});
