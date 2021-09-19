@@ -45,3 +45,24 @@ export const updateCart = asyncHandler(async (req, res) => {
 
   res.status(201).json({ success: true, data: cart });
 });
+
+//@DESC Delete Cart
+//@ROUTE /api/v1/cart/:id
+//@METHOD DELETE
+export const deleteCart = asyncHandler(async (req, res) => {
+  let cart = await Cart.findById(req.params.id);
+
+  if (cart.user._id.toString() !== req.user.id.toString()) {
+    res.status(404);
+    throw new Error("Can not delete this cart");
+  }
+
+  if (!cart) {
+    res.status(404);
+    throw new Error("Cart not found");
+  }
+
+  cart = await Cart.findByIdAndDelete(req.params.id);
+
+  res.status(201).json({ success: true, data: {} });
+});
