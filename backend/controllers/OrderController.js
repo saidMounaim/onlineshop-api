@@ -49,3 +49,19 @@ export const updateOrder = asyncHandler(async (req, res) => {
 
   res.status(201).json({ success: true, data: order });
 });
+
+//@DESC Delete Order
+//@ROUTE /api/orders/:id
+//@METHOD DELETE
+export const deleteOrder = asyncHandler(async (req, res) => {
+  let order = await Order.findById(req.params.id);
+
+  if (!order) {
+    res.status(404);
+    throw new Error("Order not found");
+  }
+
+  order = await Order.findByIdAndDelete(req.params.id);
+
+  res.status(201).json({ success: true, data: {} });
+});
