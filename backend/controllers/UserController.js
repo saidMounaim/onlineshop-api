@@ -42,6 +42,11 @@ export const updateUser = asyncHandler(async (req, res) => {
 		res.status(404);
 		throw new Error('User not found');
 	}
+	
+	if (req.user.id !== user._id.toString()) {
+	  res.status(401);
+	  throw new Error("User not authrized");
+	}
 
 	user = await User.findByIdAndUpdate(req.params.id, req.body, {
 		new: true,
@@ -58,10 +63,15 @@ export const deleteUser = asyncHandler(async (req, res) => {
 	let user = await User.findById(req.params.id);
 
 	if (!user) {
-		res.status(404);
-		throw new Error('User not found');
+	   res.status(404);
+	   throw new Error('User not found');
 	}
 
+	if (req.user.id !== user._id.toString()) {
+	  res.status(401);
+	  throw new Error("User not authrized");
+	}
+	
 	await user.delete();
 
 	res.status(201).json({ success: true, data: {} });
